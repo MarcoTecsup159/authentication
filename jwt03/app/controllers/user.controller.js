@@ -1,20 +1,28 @@
-// Controlador que responde a rutas públicas (accesibles sin autenticación)
+import db from "../models/index.js";
+
+// Controlador público (sin cambios)
 export const allAccess = (req, res) => {
-    res.status(200).send("Public Content."); // Responde con contenido público
-  };
-  
-  // Controlador que responde a rutas accesibles solo para usuarios autenticados
-  export const userBoard = (req, res) => {
-    res.status(200).send("User Content."); // Responde con contenido para usuarios comunes
-  };
-  
-  // Controlador que responde a rutas exclusivas para administradores
-  export const adminBoard = (req, res) => {
-    res.status(200).send("Admin Content."); // Responde con contenido para admins
-  };
-  
-  // Controlador que responde a rutas exclusivas para moderadores
-  export const moderatorBoard = (req, res) => {
-    res.status(200).send("Moderator Content."); // Responde con contenido para moderadores
-  };
-  
+  res.status(200).send("Public Content.");
+};
+
+// Para los demás, opcionalmente podrías verificar si la base de datos está activa
+export const userBoard = (req, res) => {
+  if (!db.user) {
+    return res.status(503).send("Modo sin base de datos: contenido limitado para usuarios.");
+  }
+  res.status(200).send("User Content.");
+};
+
+export const adminBoard = (req, res) => {
+  if (!db.user) {
+    return res.status(503).send("Modo sin base de datos: contenido limitado para administradores.");
+  }
+  res.status(200).send("Admin Content.");
+};
+
+export const moderatorBoard = (req, res) => {
+  if (!db.user) {
+    return res.status(503).send("Modo sin base de datos: contenido limitado para moderadores.");
+  }
+  res.status(200).send("Moderator Content.");
+};
