@@ -1,0 +1,17 @@
+{
+  "name": "despliegue",
+  "version": "1.0.0",
+  "main": "jwt03/server.js",
+  "author": "MarcoTecsup159 <marco.rios.c@tecsup.edu.pe>",
+  "license": "MIT",
+  "private": false,
+
+  "scripts": {
+    "dev": "nodemon jwt03/server.js",
+    "start": "node jwt03/server.js"
+  },
+  "devDependencies": {
+    "dotenv": "^16.5.0",
+    "nodemon": "^3.1.10"
+  }
+}
