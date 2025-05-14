@@ -16,7 +16,7 @@ import userRoutes from "./app/routes/user.routes.js";
 // Crea una instancia de la aplicación Express
 const app = express();
 
-// Configura las opciones de CORS para permitir acceso desde el frontend en el puerto 8080
+// Configura las opciones de CORS para permitir acceso desde el frontend en el puerto 3001
 const corsOptions = {
   origin: "http://localhost:3001",
 };
@@ -44,12 +44,24 @@ app.use("/api/test", userRoutes);
 // Define el puerto en el que se ejecutará el servidor. Usa 3000 por defecto si no hay una variable de entorno
 const PORT = process.env.PORT || 3000;
 
-// Sincroniza los modelos con la base de datos (sin borrar datos si force es false)
-// Luego inicia el servidor y escucha en el puerto definido
-db.sequelize.sync({ force: false }).then(() => {
-  console.log("Database synchronized");
-
+// Verifica si la base de datos está activa
+if (db.sequelize) {
+  // Si está activa, sincroniza los modelos con la base de datos (sin borrar datos si force es false)
+  db.sequelize
+    .sync({ force: false })
+    .then(() => {
+      console.log("✅ Database synchronized.");
+      app.listen(PORT, () => {
+        console.log(`🚀 Server is running on port ${PORT}.`);
+      });
+    })
+    .catch((err) => {
+      console.error("❌ Error synchronizing database:", err);
+    });
+} else {
+  // Si NO hay base de datos, solo inicia el servidor
+  console.log("⚠️ Modo sin base de datos: Se omite sincronización.");
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
+    console.log(`🚀 Server is running on port ${PORT} (no DB).`);
   });
-});
+}
